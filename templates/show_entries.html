@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+<1-- display rating as stars --> 
+<script type="text/javascript">
+
+function displaystars() {
+    var elementid = "ratingstars";
+    show_image(elementid ,3) ;
+}
+
+function show_image (id,number) {
+    var x = number;
+    var elementid = id;
+    for (var i =0; i<x; i++){
+        var img = document.createElement("img");
+        img.src = "stars2.png";
+        document.getElementById(elementid).appendChild(img);
+    }
+}
+
+
+{% block body %}
+  {% if not session.logged_in %}
+    <div id=intro>
+       <H2> Welcome to the burnside Library summer reading program! </h2>
+       <p> You can use this website to record your progress. Eveny yime you read a book, record it here and tell us what you thought!<br>
+           You can track your progress and see how well others are doing too. You can also see what others are reading. 
+       </p>
+  
+    </div> 
+  
+  {% else %}  
+    <h2>Finished reading a book? Add it here!</h2>
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+      <dl>
+        <dt>Title:
+        <dd><input type=text size=30 name=title>
+        <dt>Author:
+        <dd><input type=text size=30 name=author>
+        <dt>What did you think of the book?
+        <dd><textarea name=description rows=5 cols=40></textarea>
+        <dt>How do you rate the book?
+        <dd><input name=rating type=radio value = "5">5 Stars - Couldn't put it down!
+        <dd><input name=rating type=radio value = "4">4 Stars - Liked it 
+        <dd><input name=rating type=radio value = "3">3 Stars - It was OK 
+        <dd><input name=rating type=radio value = "2">2 Stars - It wasn't great
+        <dd><input name=rating type=radio value = "1">1 Star - Not for me        
+      </dl>
+        <p><input type=submit value=Share></p>
+    </form>
+    <h2> So far, you've read: </h2>
+    <ul class=entries>
+      {% for entry in entries %}
+        <li><h4>{{ entry.title }} by {{ entry.author }},  <span id="ratingstars"><span></h4>
+            <p>{{ entry.description|safe }}
+      {% else %}
+        <li><em>You haven't added any books yet!</em>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

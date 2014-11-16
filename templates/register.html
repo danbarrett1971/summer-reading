@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Sign up here!</h2>
+  <!-- print an error if one exists --> 
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('adduser') }}" method=post>
+    <table>
+        <tr>
+            <td><h2>Setup your login details</h2>
+                <P>To create your account, we need your first name, or a nickname, and a password you can remember easily. We suggest using the last four digits of your library card as your password. </P>
+            </td>
+        </tr>
+        <tr>
+            <td>What's your nickname, or first name? </br>This name will be used to identify you on the web site.</td>
+            <td></td>
+            <td><input type=text name="nickname"</td>
+        </tr>
+        <tr>
+            <td>Please enter the last four digits of your library card. 
+            </br> You'll need this to login to the site.
+            </td>
+            <td></td>
+            <td><input type=text name="password"</td>
+        </tr>
+        <tr>
+            <td><h2>Please provide some other details here</h2>
+                <p>We need some other details from you, so we can contact you if we need to. </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td>What's your name? </br>(We won't display this on the site)</td>
+            <td></td>
+            <td><input type=text name="name"</td>
+        </tr>
+
+        <tr>
+            <td>Please provide an email address we can contact you on: <br>
+            </td>
+            <td></td>
+            <td><input type=text name="email"</td>
+        </tr>
+        <tr>
+            <td>Or, if you don't have an email address - <br>
+        </tr>
+        <tr>
+            <td>What's your full library card number (not just the last four digits)? <br>
+            </td>
+            <td></td>
+            <td><input type=text name="full_librarycard"</td>
+        </tr>
+        <tr>
+            <td>Thanks for all that information! Please click the button to continue.<br>
+            </td>
+            <td></td>
+            <td><input type=submit value="Create my Account"></td>
+        </tr>
+        
+        
+    </table>
+  </form>
+{% endblock %}

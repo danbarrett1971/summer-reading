@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Login</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <p> Please enter: </p>
+  <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"></script>
+  <script>
+    var hashedpwd = CryptoJS.SHA3(document.getElementById("passwordclear").value);
+  </script>
+  <form action="{{ url_for('login') }}" method=post>
+    <table>
+      <tr>
+          <td>
+            Your first name, or nickname
+          </td>
+          <td>
+            <input type=text name=username>            
+          </td>        
+      </tr>
+      <tr>
+          <td>
+           The last 4 digits of your library card:
+          </td>
+          <td>
+            <input type=password name=passwordclear>
+            <input type=hidden name=password>  
+          </td>        
+      </tr>
+      <tr>
+          <td>
+            <input type=submit value=Login>
+          </td>
+      </tr>   
+    </table>
+  </form>
+{% endblock %}
