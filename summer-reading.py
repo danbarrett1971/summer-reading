@@ -41,8 +41,14 @@ login_manager.init_app(app)
 # redirect users to the login view when required 
 login_manager.login_view = 'login'
 
+# define how we're going to load a user object
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
-# define the user class. Note this relies on the sqlalchemy plugin 
+
+
+# define the user class. Note this relies on the sqlalchemy plugin and flask_login
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column('id',db.Integer , primary_key=True)
@@ -114,8 +120,13 @@ def register():
     if request.method == 'GET':
         return render_template('register.html')
     user = User(request.form['name'] , request.form['nickname'], request.form['password'], request.form['full_librarycard'], request.form['email'])
-    g.db.execute('insert into users(fullname, nickname, password, full_librarycard, email) values (?,?,?,?,?)',
-                 user.name,user.nickname.user.password,user.full_librarycard,user.email)
+    # ass user via sqlalchemy 
+    db.session.add(user)
+    db.session.commit()
+    flash("Successfully added user!")
+    
+    #g.db.execute('insert into users(fullname, nickname, password, full_librarycard, email) values (?,?,?,?,?)',
+    #             user.name,user.nickname.user.password,user.full_librarycard,user.email)
         
     db.session.commit()
     flash('Welcome! you\'re successfully registered!')
