@@ -1,9 +1,19 @@
 # all the imports
 import sqlite3
+
+# import flask
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
-from flask import Flask,session, request, flash, url_for, redirect, render_template, abort ,g
-from flask.ext.login import login_user , logout_user , current_user , login_required
+
+# import sqlalchemy so we can use database classes
+from flask.ext.sqlalchemy import SQLAlchemy
+
+# include flask login so we get automatic login functionality
+from flask.ext.login import (LoginManager, current_user, login_required, \
+                             login_user, logout_user, UserMixin, AnonymousUser, \
+                             confirm_login, fresh_login_required)
+
+from datetime import datetime
 
 # configuration
 WTF_CSRF_ENABLED = True
@@ -14,30 +24,32 @@ SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = '1234'
 
-# create our little application :)
+# create the app 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+# create the db if it doesn't exist
+db = SQLAlchemy(app)
 
 # load settings from a config file instad, as an option
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 #create login manager object
-login_manager = LoginManager()
+login_manager = flask.ext.login.LoginManager()
 login_manager.init_app(app)
 
 # redirect users to the login view when required 
 login_manager.login_view = 'login'
 
 
-# define the user class.
+# define the user class. Note this relies on the sqlalchemy plugin 
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column('id',db.Integer , primary_key=True)
     fullname = db.Column('fullname', db.String(20) ,index=True)
     nickname = db.Column('nickname', db.String(20) ,unique=true , index=True)
     password = db.Column('password' , db.String(10))
-    full_librarycard = db/column('full_librarycard', db.string(20))
+    full_librarycard = db.column('full_librarycard', db.string(20))
     email = db.Column('email',db.String(50), index=True)
     registered_on = db.Column('registered_on' , db.DateTime)
  
@@ -54,7 +66,7 @@ class User(db.Model):
  
     def is_active(self):
         return True
- 
+
     def is_anonymous(self):
         return False
  
