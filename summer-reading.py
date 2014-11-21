@@ -10,7 +10,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 # include flask login so we get automatic login functionality
 from flask.ext.login import (LoginManager, current_user, login_required, \
-                             login_user, logout_user, UserMixin, AnonymousUser, \
+                             login_user, logout_user, UserMixin, \
                              confirm_login, fresh_login_required)
 
 from datetime import datetime
@@ -35,7 +35,7 @@ db = SQLAlchemy(app)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 #create login manager object
-login_manager = flask.ext.login.LoginManager()
+login_manager = LoginManager()
 login_manager.init_app(app)
 
 # redirect users to the login view when required 
@@ -47,9 +47,9 @@ class User(db.Model):
     __tablename__ = "users"
     id = db.Column('id',db.Integer , primary_key=True)
     fullname = db.Column('fullname', db.String(20) ,index=True)
-    nickname = db.Column('nickname', db.String(20) ,unique=true , index=True)
+    nickname = db.Column('nickname', db.String(20) ,unique=True , index=True)
     password = db.Column('password' , db.String(10))
-    full_librarycard = db.column('full_librarycard', db.string(20))
+    full_librarycard = db.Column('full_librarycard', db.String(20))
     email = db.Column('email',db.String(50), index=True)
     registered_on = db.Column('registered_on' , db.DateTime)
  
@@ -132,28 +132,28 @@ def login():
 def load_user(id):
     return User.query.get(int(id))
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
-            session['logged_in'] = True
-            flash('Welcome back to the Burnside Summer Reading Program!')
-            return redirect(url_for('show_entries'))
-    return render_template('login.html', error=error)
+#@app.route('/login', methods=['GET', 'POST'])
+#def login():
+#    error = None
+#    if request.method == 'POST':
+#        if request.form['username'] != app.config['USERNAME']:
+#           error = 'Invalid username'
+#       elif request.form['password'] != app.config['PASSWORD']:
+#            error = 'Invalid password'
+#        else:
+#            session['logged_in'] = True
+#            flash('Welcome back to the Burnside Summer Reading Program!')
+#            return redirect(url_for('show_entries'))
+#    return render_template('login.html', error=error)
 
 # logout 
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    flash('You were logged out')
-    return redirect(url_for('show_entries'))
+#@app.route('/logout')
+#def logout():
+#    session.pop('logged_in', None)
+#    flash('You were logged out')
+#    return redirect(url_for('show_entries'))
 
 # --------------- main --------------------     
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='192.168.7.2')
+    app.run(host='0.0.0.0')

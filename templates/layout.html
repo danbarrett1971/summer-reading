@@ -7,12 +7,12 @@
   <h1>iRead</h1>
   <div class=metanav>
     {% if not session.logged_in %}
-      <a href="{{ url_for('login') }}">Log in here!</a>
-      <a href="{{ url_for('adduser') }}">Don't have a login? sign up here!</a>
+       <p> Not logged in yet. </p>
+     
       
     {% else %}
-      <p> You've read {% g.books_read % } so far. </p>
-      <a href="{{ url_for('logout') }}">Log out</a>
+      
+     
     {% endif %}
   </div>
   {% for message in get_flashed_messages() %}
