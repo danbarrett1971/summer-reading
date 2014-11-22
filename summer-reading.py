@@ -13,6 +13,9 @@ from flask.ext.login import (LoginManager, current_user, login_required, \
                              login_user, logout_user, UserMixin, \
                              confirm_login, fresh_login_required)
 
+from flask.ext.wtf import Form, TextField, TextAreaField, SubmitField, validators, ValidationError, PasswordField 
+from models import db, user
+from werkzeug import generate_password_hash, check_password_hash
 from datetime import datetime
 
 # configuration
@@ -52,9 +55,9 @@ def load_user(id):
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column('id',db.Integer , primary_key=True)
-    fullname = db.Column('fullname', db.String(20) ,index=True)
     nickname = db.Column('nickname', db.String(20) ,unique=True , index=True)
     password = db.Column('password' , db.String(10))
+    fullname = db.Column('fullname', db.String(20) ,index=True)
     full_librarycard = db.Column('full_librarycard', db.String(20))
     email = db.Column('email',db.String(50), index=True)
     registered_on = db.Column('registered_on' , db.DateTime)
@@ -64,8 +67,14 @@ class User(db.Model):
         self.nickname = nickname
         self.full_librarycard = full_librarycard
         self.password = password
-        self.email = email
+        self.email = email.lower()
         self.registered_on = datetime.utcnow()
+
+    def set_password(self, password):
+        self.pwdhash = generate_password_hash(password)        
+  
+    def check_password(self, password):
+        return check_password_hash(self.pwdhash, password)
 
     def is_authenticated(self):
         return True
@@ -81,6 +90,33 @@ class User(db.Model):
  
     def __repr__(self):
         return '<User %r>' % (self.nickname)
+# ```````````````````````````````````   
+# signupform class
+# ```````````````````````````````````   
+
+class SignupForm(Form):
+  nickname = TextField("Nickname",  [validators.Required("Please enter your nickname!.")])
+  password = PasswordField('The last 4 digits of your library card', [validators.Required("Please enter a password.")])
+  fullname = TextField("Your Full Name",  [validators.Required("Please enter your Full name.")])
+  email = TextField("An Email address we can contact you on:",  [validators.Email("Please enter a valid email address.")])
+  full_libararycard = TextField("Your full library card number")
+  submit = SubmitField("Create your account")
+ 
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+ 
+  def validate(self):
+    if not Form.validate(self):
+      return False
+     
+    nickname = User.query.filter_by(nickname = self.nickname.data.lower()).first()
+    if nickname:
+      self.email.errors.append("Sorry, someone's already using that nickname. Please use another.")
+      return False
+    else:
+      return True
+    
+ # ```````````````````````````````````   
 
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
