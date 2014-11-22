@@ -7,10 +7,12 @@
   <h1>iRead</h1>
   <div class=metanav>
     {% if not session.logged_in %}
-       <p> Not logged in yet. </p>
+       <p> Login <a href="login">here!</a> </p>
+       <p> Don't have an account yet? <a href="register">Create one here!</a></p>
      
       
     {% else %}
+       <p> Log out<a href="logout">here!</a> </p>
       
      
     {% endif %}

@@ -3,10 +3,10 @@
   <h2>Sign up here!</h2>
   <!-- print an error if one exists --> 
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('adduser') }}" method=post>
+  <form action="{{ url_for('register') }}" method=post>
     <table>
         <tr>
-            <td><h2>Setup your login details</h2>
+            <td colspan=3><h2>Setup your login details</h2>
                 <P>To create your account, we need your first name, or a nickname, and a password you can remember easily. We suggest using the last four digits of your library card as your password. </P>
             </td>
         </tr>
@@ -23,7 +23,7 @@
             <td><input type=text name="password"</td>
         </tr>
         <tr>
-            <td><h2>Please provide some other details here</h2>
+            <td colspan=3><h2>Please provide some other details here</h2>
                 <p>We need some other details from you, so we can contact you if we need to. </p>
             </td>
         </tr>
