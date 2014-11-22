@@ -30,8 +30,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # create the db if it doesn't exist
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/summer-reading.db'
 db = SQLAlchemy(app)
-
 # load settings from a config file instad, as an option
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
